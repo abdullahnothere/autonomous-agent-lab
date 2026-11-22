@@ -12,7 +12,7 @@ agent plans and coordinates, and specialist subagents carry out focused work.
 | `docs/decisions.md` | Architecture decision records (ADRs) |
 | `docs/progress.md` | Running log of work done, in progress and blocked |
 | `.claude/agents/` | Specialist subagent definitions |
-| `.github/workflows/ci.yml` | CI: repo checks, then lint/typecheck/test once code exists |
+| `.github/workflows/ci.yml` | CI on `main` PRs/pushes: install, typecheck, lint, test, build |
 | `scripts/validate-agents.sh` | Checks every agent file has valid frontmatter |
 
 ## Specialist agents
@@ -34,6 +34,6 @@ in `CLAUDE.md`.
 
 ## CI
 
-CI always validates the repo structure and agent definitions. Once a
-`package.json` exists, it also runs `npm ci`, then the `lint`, `typecheck`
-and `test` scripts — each one only if it is defined.
+`Project CI` runs on pull requests and pushes to `main`: `npm ci`, then the
+`typecheck`, `lint`, `test` and `build` scripts (each skipped if undefined).
+It needs a committed `package.json` and `package-lock.json`.

@@ -33,7 +33,7 @@ entry. Do not edit accepted decisions — supersede them with a new entry.
 
 ## ADR-002: CI that adapts to repository contents
 - Date: 2026-11-22
-- Status: Accepted
+- Status: Superseded by ADR-003
 - Context: No application code exists yet, but CI should be in place from the
   first commit and should not need rewriting when code arrives.
 - Decision: CI always validates structure and agent definitions; it runs
@@ -43,3 +43,16 @@ entry. Do not edit accepted decisions — supersede them with a new entry.
   scripts now (CI would fail on an empty repo).
 - Consequences: Once a project exists, a missing `lint`/`typecheck`/`test`
   script is skipped silently — the QA agent must make sure all three are defined.
+
+## ADR-003: Single Node CI job on main
+- Date: 2026-11-22
+- Status: Accepted
+- Context: The project owner supplied a standard Node CI workflow.
+- Decision: `.github/workflows/ci.yml` runs one job on pushes and pull
+  requests to `main`: `npm ci`, then `typecheck`, `lint`, `test` and `build`
+  (each only if the script is defined).
+- Alternatives: Keep the adaptive repo-checks workflow from ADR-002.
+- Consequences: CI requires `package.json` and `package-lock.json`; until they
+  exist it fails at setup/install. Agent-definition and `.env` checks no
+  longer run in CI (`scripts/validate-agents.sh` can still be run locally).
+  Feature-branch pushes only get CI through a pull request to `main`.

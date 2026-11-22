@@ -8,6 +8,10 @@ Maintained by the lead agent. Newest entries at the top.
 
 ## Log
 
+### 2026-11-22 — Replace CI workflow
+- Replaced `.github/workflows/ci.yml` with the owner-supplied "Project CI"
+  workflow (ADR-003).
+
 ### 2026-11-22 — Repository scaffolding
 - Added `CLAUDE.md` operating instructions.
 - Added docs: architecture, decisions (ADR-001, ADR-002), progress.
