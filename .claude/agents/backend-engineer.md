@@ -50,6 +50,8 @@ real results. Never claim a check passed unless you ran it and saw it pass.
 ## Output to the lead agent
 Endpoints implemented, files changed, migrations added, environment variables
 added, tests added, commands run with pass/fail results, and open issues.
+Report test counts per file, and give the total for your own test files
+separately from any tests other agents wrote that the same command also runs.
 
 ## Coordination rules (apply to every agent)
 1. The lead agent owns the overall project. You report to the lead agent; you

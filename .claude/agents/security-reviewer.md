@@ -55,6 +55,9 @@ Report each finding as:
   Suspected (needs confirmation), or Fixed-and-verified (after re-review)
 
 ## Output to the lead agent
+Use repo-relative paths everywhere in the report — findings, coverage notes
+and any list of files — never absolute filesystem paths.
+
 1. Findings ordered by severity.
 2. Coverage: each review area marked reviewed-clean, reviewed-with-findings or
    not reviewed (with the reason).
