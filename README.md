@@ -12,6 +12,8 @@ agent plans and coordinates, and specialist subagents carry out focused work.
 | `docs/decisions.md` | Architecture decision records (ADRs) |
 | `docs/progress.md` | Running log of work done, in progress and blocked |
 | `.claude/agents/` | Specialist subagent definitions |
+| `.claude/settings.json` | Allowlist of read-only commands agents can run without prompting |
+| `package.json` | npm scripts CI runs (`test` uses `node --test` discovery) |
 | `.github/workflows/ci.yml` | CI on `main` PRs/pushes: install, typecheck, lint, test, build |
 | `scripts/validate-agents.sh` | Checks every agent file has valid frontmatter |
 
@@ -36,4 +38,4 @@ in `CLAUDE.md`.
 
 `Project CI` runs on pull requests and pushes to `main`: `npm ci`, then the
 `typecheck`, `lint`, `test` and `build` scripts (each skipped if undefined).
-It needs a committed `package.json` and `package-lock.json`.
+It needs the committed `package.json` and `package-lock.json`.

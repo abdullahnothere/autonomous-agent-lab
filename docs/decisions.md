@@ -56,3 +56,31 @@ entry. Do not edit accepted decisions — supersede them with a new entry.
   exist it fails at setup/install. Agent-definition and `.env` checks no
   longer run in CI (`scripts/validate-agents.sh` can still be run locally).
   Feature-branch pushes only get CI through a pull request to `main`.
+
+## ADR-004: Root package.json before application code
+- Date: 2026-11-23
+- Status: Accepted
+- Context: CI (ADR-003) needs `package.json` and `package-lock.json`, and QA
+  found that `node --test src/` runs no tests.
+- Decision: Commit a private, dependency-free `package.json` with
+  `"test": "node --test"` (Node's default discovery of `*.test.*` files) and
+  `"lint:agents"` running `scripts/validate-agents.sh`.
+- Alternatives: Wait for the first project to add one (CI fails until then);
+  a hard-coded glob (would guess a layout that does not exist yet).
+- Consequences: When TypeScript tests arrive, the `test` script must be
+  updated to a runner or glob that picks up `.ts` files.
+
+## ADR-005: Project allowlist for read-only commands
+- Date: 2026-11-23
+- Status: Accepted
+- Context: Subagents stopped for permission on routine read-only commands,
+  and QA could not run one check.
+- Decision: `.claude/settings.json` allows file inspection (`ls`, `cat`,
+  `grep`, ...), read-only git, `npm ls/audit/outdated`, and the project's
+  test, lint and typecheck scripts. Nothing that installs, writes, deletes or
+  pushes is listed.
+- Consequences: `npm test` and `npm run ...` execute project code, so a
+  malicious `package.json` change could run unprompted; review changes to
+  scripts like any other code. Personal overrides go in the gitignored
+  `.claude/settings.local.json`.
+
