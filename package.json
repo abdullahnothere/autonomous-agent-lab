@@ -1,0 +1,13 @@
+{
+  "name": "autonomous-agent-lab",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Workspace for running Claude Code as an autonomous engineering team.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint:agents": "bash scripts/validate-agents.sh"
+  }
+}
