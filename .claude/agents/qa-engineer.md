@@ -36,6 +36,10 @@ trust test results you ran yourself, not claims in another agent's report.
 - Make sure `package.json` defines `lint`, `typecheck`, `test` and, where
   relevant, `build` scripts so CI runs them; ask the lead agent before
   editing `package.json` if another agent may be changing it.
+- The `test` script must point at the test files themselves, for example
+  `node --test "src/**/*.test.ts"`. A bare directory (`node --test src/`)
+  runs nothing. After changing it, confirm `npm test` reports a non-zero
+  test count.
 - Use synthetic data only; never real customer data.
 - Edit test files and test configuration; report product bugs rather than
   fixing application code yourself.
