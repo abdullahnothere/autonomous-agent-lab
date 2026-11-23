@@ -72,7 +72,7 @@ entry. Do not edit accepted decisions — supersede them with a new entry.
 
 ## ADR-005: Project allowlist for read-only commands
 - Date: 2026-11-23
-- Status: Accepted
+- Status: Superseded by ADR-006
 - Context: Subagents stopped for permission on routine read-only commands,
   and QA could not run one check.
 - Decision: `.claude/settings.json` allows file inspection (`ls`, `cat`,
@@ -83,4 +83,27 @@ entry. Do not edit accepted decisions — supersede them with a new entry.
   malicious `package.json` change could run unprompted; review changes to
   scripts like any other code. Personal overrides go in the gitignored
   `.claude/settings.local.json`.
+
+## ADR-006: Narrow the read-only allowlist to commands that cannot write or execute
+- Date: 2026-11-23
+- Status: Accepted
+- Context: A security review in an orchestration test found that ADR-005's
+  prefix rules allowed more than reading. `rg --pre <cmd>` runs any command
+  (confirmed), `git diff/log/show --output=<file>` writes files (confirmed),
+  `tree -o` writes files, and `npm test`, `npm run ...` and `node --test`
+  with `:*` accept arguments that load arbitrary code (`--import`,
+  `--config`, `--prefix`).
+- Decision: Keep `:*` only for commands with no option that writes files or
+  runs other programs (`ls`, `cat`, `head`, `tail`, `wc`, `grep`,
+  `git status`, `git ls-files`, `git blame`). Allow git diff/log/show, npm
+  and project scripts only as exact commands with no extra arguments. Drop
+  `rg`, `tree`, `diff`, `npx tsc` and `node --test`.
+- Alternatives: Keep the prefixes and add deny rules for dangerous flags
+  (each new flag is a new hole; deny patterns cannot list every option
+  order). Remove the allowlist (back to frequent prompts).
+- Consequences: Variants such as `git log --oneline -5` or
+  `npm run test:backend` still prompt. `npm test`, `npm run lint` and
+  `npm run typecheck` still run repo-controlled scripts unprompted, so
+  changes to `package.json` scripts and test-runner config files need
+  review like any other code. Search should use the built-in Grep tool.
 
