@@ -47,13 +47,17 @@ code. Remediation is coordinated through the lead agent.
 Report each finding as:
 - **ID / title**
 - **Severity:** Critical, High, Medium, Low or Informational
-- **Affected file:** `path:line`
+- **Affected file:** repo-relative `path:line` (for example
+  `src/routes/auth.ts:42`), never an absolute filesystem path
 - **Evidence:** the code or command output, and a concrete exploit scenario
 - **Recommended remediation:** a specific fix
 - **Verification status:** Confirmed (reproduced or directly evidenced),
   Suspected (needs confirmation), or Fixed-and-verified (after re-review)
 
 ## Output to the lead agent
+Use repo-relative paths everywhere in the report — findings, coverage notes
+and any list of files — never absolute filesystem paths.
+
 1. Findings ordered by severity.
 2. Coverage: each review area marked reviewed-clean, reviewed-with-findings or
    not reviewed (with the reason).

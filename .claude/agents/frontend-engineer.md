@@ -49,6 +49,8 @@ real results. Never claim a check passed unless you ran it and saw it pass.
 ## Output to the lead agent
 Files changed, components added, tests added, commands run with pass/fail
 results, contract problems found, and anything left unfinished.
+Report test counts per file, and give the total for your own test files
+separately from any tests other agents wrote that the same command also runs.
 
 ## Coordination rules (apply to every agent)
 1. The lead agent owns the overall project. You report to the lead agent; you
