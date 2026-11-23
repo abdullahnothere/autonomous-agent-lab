@@ -8,6 +8,20 @@ Maintained by the lead agent. Newest entries at the top.
 
 ## Log
 
+### 2026-11-23 — End-to-end orchestration test
+- Ran all five agents on a small feedback widget (node:http API + React
+  form) in a throwaway copy of the repo; nothing from it was committed.
+- Results: typecheck, lint and tests passed (208 backend, 88 frontend
+  tests); every acceptance criterion passed; agents stayed within their
+  assigned files. The architect kept new features as proposals but still
+  wrote stricter-than-brief behaviour (415/413) into the acceptance criteria.
+- Security review found the ADR-005 allowlist allowed command execution
+  (`rg --pre`) and file writes (`git diff --output`). Narrowed it (ADR-006).
+- Tightened agent instructions: the architect treats stricter or different
+  behaviour as a proposal; the engineers report per-file test counts, with
+  their own tests counted separately; the security reviewer uses
+  repo-relative paths throughout its report.
+
 ### 2026-11-23 — Fixes from agent test run
 - Architect: proposes scope beyond the brief as an open question instead of
   assuming it.
