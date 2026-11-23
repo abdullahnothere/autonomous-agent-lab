@@ -56,3 +56,54 @@ entry. Do not edit accepted decisions — supersede them with a new entry.
   exist it fails at setup/install. Agent-definition and `.env` checks no
   longer run in CI (`scripts/validate-agents.sh` can still be run locally).
   Feature-branch pushes only get CI through a pull request to `main`.
+
+## ADR-004: Root package.json before application code
+- Date: 2026-11-23
+- Status: Accepted
+- Context: CI (ADR-003) needs `package.json` and `package-lock.json`, and QA
+  found that `node --test src/` runs no tests.
+- Decision: Commit a private, dependency-free `package.json` with
+  `"test": "node --test"` (Node's default discovery of `*.test.*` files) and
+  `"lint:agents"` running `scripts/validate-agents.sh`.
+- Alternatives: Wait for the first project to add one (CI fails until then);
+  a hard-coded glob (would guess a layout that does not exist yet).
+- Consequences: When TypeScript tests arrive, the `test` script must be
+  updated to a runner or glob that picks up `.ts` files.
+
+## ADR-005: Project allowlist for read-only commands
+- Date: 2026-11-23
+- Status: Superseded by ADR-006
+- Context: Subagents stopped for permission on routine read-only commands,
+  and QA could not run one check.
+- Decision: `.claude/settings.json` allows file inspection (`ls`, `cat`,
+  `grep`, ...), read-only git, `npm ls/audit/outdated`, and the project's
+  test, lint and typecheck scripts. Nothing that installs, writes, deletes or
+  pushes is listed.
+- Consequences: `npm test` and `npm run ...` execute project code, so a
+  malicious `package.json` change could run unprompted; review changes to
+  scripts like any other code. Personal overrides go in the gitignored
+  `.claude/settings.local.json`.
+
+## ADR-006: Narrow the read-only allowlist to commands that cannot write or execute
+- Date: 2026-11-23
+- Status: Accepted
+- Context: A security review in an orchestration test found that ADR-005's
+  prefix rules allowed more than reading. `rg --pre <cmd>` runs any command
+  (confirmed), `git diff/log/show --output=<file>` writes files (confirmed),
+  `tree -o` writes files, and `npm test`, `npm run ...` and `node --test`
+  with `:*` accept arguments that load arbitrary code (`--import`,
+  `--config`, `--prefix`).
+- Decision: Keep `:*` only for commands with no option that writes files or
+  runs other programs (`ls`, `cat`, `head`, `tail`, `wc`, `grep`,
+  `git status`, `git ls-files`, `git blame`). Allow git diff/log/show, npm
+  and project scripts only as exact commands with no extra arguments. Drop
+  `rg`, `tree`, `diff`, `npx tsc` and `node --test`.
+- Alternatives: Keep the prefixes and add deny rules for dangerous flags
+  (each new flag is a new hole; deny patterns cannot list every option
+  order). Remove the allowlist (back to frequent prompts).
+- Consequences: Variants such as `git log --oneline -5` or
+  `npm run test:backend` still prompt. `npm test`, `npm run lint` and
+  `npm run typecheck` still run repo-controlled scripts unprompted, so
+  changes to `package.json` scripts and test-runner config files need
+  review like any other code. Search should use the built-in Grep tool.
+

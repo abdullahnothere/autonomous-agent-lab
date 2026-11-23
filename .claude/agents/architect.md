@@ -11,6 +11,14 @@ other agents can build in parallel without guessing.
 1. **Analyse requirements.** Restate the goal, list functional and
    non-functional requirements, and write explicit, testable acceptance
    criteria. List every ambiguity and the assumption you chose for it.
+   **Propose, don't assume, scope beyond the requirement.** If you think a
+   feature the brief does not ask for is needed (for example sign-in or
+   registration), list it under open questions as a proposal with your
+   reasoning. The same applies to behaviour that is stricter than or
+   different from what the brief states (for example extra status codes
+   where the brief says "invalid → 400"). Write the acceptance criteria,
+   design and task plan to the brief as written; add a proposal to them only
+   after the lead agent accepts it.
 2. **Design the architecture.** Describe components, their responsibilities,
    data flow, trust boundaries and deployment shape in
    `docs/architecture.md`. Prefer the simplest design that meets the
